@@ -1,0 +1,52 @@
+% image thresholding to find watersheds
+%% 
+% read in the image
+I = imread('image name');
+% show image
+%imshow(I)
+% use tools to inspect actual pixel values
+%% show the image with pixel information
+imtool(I)
+% grayscale image
+%% convert image to a grayscale and then display
+Igray = rgb2gray(I);
+% show grayscale
+%figure(1)
+%imshow(Igray)
+imtool(Igray)
+%% choose level at which to threshold (1 white 0 black based on gray image)
+level = 0.6;
+% use level of threshold to convert to binary image
+Ithresh = im2bw(Igray,level);
+imtool(Ithresh)
+% display both the regular image and the binary image
+%figure(2)
+%imshow(Ithresh)
+figure(1)
+imshowpair(I,Ithresh,'montage')
+% state that impervious materials are 1
+imperv = Ithresh == 1;
+% use logical filtering make a list of ones
+ilist = Ithresh(imperv);
+size(ilist);
+%%
+% make list of 0 values and get size
+perm = Ithresh == 0;
+plist = Ithresh(perm);
+size(plist);
+% compare the number of elements in each
+totalPixels = numel(plist) + numel(ilist);
+% compare to the total number of pixels
+numel(Ithresh)
+percImp = ((numel(ilist))/numel(Ithresh))*100;
+percP = ((numel(plist))/numel(Ithresh))*100;
+[totRow totCol] = size(Ithresh);
+fprintf('In this image there are %d rows and %d columns\n', totRow, totCol)
+fprintf('making the total size of the image %d pixels.\n', totalPixels)
+fprintf('\n')
+fprintf('There were %d pixels with a values of 1 or impervious\n',numel(ilist))
+fprintf('and %d pixels with a value of 0 or pervious.\n',numel(plist))
+fprintf('\n')
+fprintf('Based on the image analysis and comparison to the total\n')
+fprintf('The percentage of pervious surface is %.2f \n', percP)
+fprintf('The percentage of impervious surface is %.2f \n', percImp)
